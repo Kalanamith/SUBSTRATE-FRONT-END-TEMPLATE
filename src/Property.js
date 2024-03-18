@@ -5,13 +5,21 @@ import { useSubstrateState } from './substrate-lib'
 export default function Main() {
   const [status, setStatus] = useState(null)
   const [methodLabel, setMethodLabel] = useState(null)
-  const [collectionId, setCollectionId] = useState(1020) // Initial collectionId
-  const [metaData, setMetaData] = useState('')
-  const [propertyClassAttribute, setPropertyAttribute] = useState('') 
+
+
+  // Attributes related to property collection / class
+  const [propertyCollectionId, setPropertyCollectionId] = useState(1020) // Initial collectionId
+  const [propertyCollectionMetadata, setPropertyCollectionMetadata] = useState('')
+  const [propertyCollectionAttribute, setPropertyCollectionAttribute] = useState('') 
+
+
+  // Attributes related to property / NFT
   // eslint-disable-next-line no-unused-vars
   const [nftAttributes, setNFTAttributes] = useState('')
-  const [nftPrice, setNFTPrice] = useState(0)// State to hold metadata
 
+  // eslint-disable-next-line no-unused-vars
+  const [nft, setNFT]  = useState('')
+  const [nftPrice, setNFTPrice] = useState(0)// State to hold metadata
   const [nftMetadata, setNFTMetadata] = useState('')
 
   const { keyring } = useSubstrateState()
@@ -23,13 +31,13 @@ export default function Main() {
       const ALICE = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
       const alicePair = keyring.getPair(ALICE);
 
-      const create_class = api.tx.uniques.create(collectionId, alicePair.address);
+      const create_class = api.tx.uniques.create(propertyCollectionId, alicePair.address);
 
       await create_class.signAndSend(alicePair, ({ events = [], status }) => {
         console.log('Transaction status:', status.type);
         if (status.isInBlock) {
           setStatus({ type: 'success', message: 'Transaction successful with hash: ' + status.asInBlock.toHex() + ' '+ status.type });
-          setCollectionId(prevId => prevId + 1); // Increment collectionId by 1
+          setPropertyCollectionId(prevId => prevId + 1); // Increment collectionId by 1
         } else {
           setStatus({ type: 'error', message: 'Status of transaction: ' + status.type });
         }
@@ -43,6 +51,42 @@ export default function Main() {
       console.error('Error:', error);
       setStatus({ type: 'error', message: 'Error: ' + error.message });
     }
+  }
+
+  /*
+  
+  Sets NFT Attributes
+  */
+  const handleSetNFTAttributes = async () => {
+    const ALICE = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY'
+    // eslint-disable-next-line no-unused-vars
+    const alicePair = keyring.getPair(ALICE);
+    const collectionId = 1020;
+    const itemId = 1;
+    const key = 'key';
+    const value = 'value';
+   
+    const tx = api.tx.uniques.setAttribute(collectionId, itemId, key, value);
+    try {
+      await tx.signAndSend(alicePair, ({ events = [], status }) => {
+        console.log('Transaction status:', status.type);
+        if (status.isInBlock) {
+          setStatus({ type: 'success', message: 'Transaction successful with hash: ' + status.asInBlock.toHex() + ' '+ status.type });
+        } else {
+          setStatus({ type: 'error', message: 'Status of transaction: ' + status.type });
+        }
+
+        events.forEach(({ event: { method } }) => {
+          console.log(method);
+          setMethodLabel(method);
+        });
+      });
+
+    } catch (error) {
+      console.error('Error:', error);
+      setStatus({ type: 'error', message: 'Error: ' + error.message });
+    }
+
   }
 
   // Sets metadata for an NFT
@@ -202,7 +246,7 @@ export default function Main() {
         console.log('Transaction status:', status.type);
         if (status.isInBlock) {
           setStatus({ type: 'success', message: 'Transaction successful with hash: ' + status.asInBlock.toHex() + ' '+ status.type });
-          setCollectionId(prevId => prevId + 1); // Increment collectionId by 1
+          setPropertyCollectionId(prevId => prevId + 1); // Increment collectionId by 1
         } else {
           setStatus({ type: 'error', message: 'Status of transaction: ' + status.type });
         }
@@ -224,7 +268,7 @@ export default function Main() {
         const alicePair = keyring.getPair(ALICE);
 
         const metadata = {
-            uri: metaData,
+            uri: propertyCollectionMetadata,
             properties: {
                 key1: 'value1',
                 key2: 'value2'
@@ -252,7 +296,7 @@ export default function Main() {
           console.log('Transaction status:', status.type);
           if (status.isInBlock) {
             setStatus({ type: 'success', message: 'Transaction successful with hash: ' + status.asInBlock.toHex() + ' '+ status.type });
-            setCollectionId(prevId => prevId + 1); // Increment collectionId by 1
+            setPropertyCollectionId(prevId => prevId + 1); // Increment collectionId by 1
           } else {
             setStatus({ type: 'error', message: 'Status of transaction: ' + status.type });
           }
@@ -303,7 +347,7 @@ export default function Main() {
           )}
           {/* Display the new collectionId in a new label */}
           <Label color='green' style={{ fontWeight: 'bold' }}>
-            New Collection ID: {collectionId}
+            New Collection ID: {propertyCollectionId}
           </Label>
         </div>
         {/* Text area for entering collection metadata */}
@@ -311,8 +355,8 @@ export default function Main() {
           <label>Collection Meta Data:</label>
           <TextArea
             placeholder='Enter collection metadata...'
-            value={metaData}
-            onChange={(e) => setMetaData(e.target.value)}
+            value={propertyCollectionMetadata}
+            onChange={(e) => setPropertyCollectionMetadata(e.target.value)}
           />
         </Form.Field>
         {/* Button to set collection metadata */}
@@ -323,8 +367,8 @@ export default function Main() {
           <label>Collection Attribute, Key Value Only</label>
           <TextArea
             placeholder='Enter Property collection key and a value'
-            value={propertyClassAttribute}
-            onChange={(e) => setPropertyAttribute(e.target.value)}
+            value={propertyCollectionAttribute}
+            onChange={(e) => setPropertyCollectionAttribute(e.target.value)}
           />
         </Form.Field>
         <Form.Field style={{ textAlign: 'center' }}>
@@ -335,7 +379,7 @@ export default function Main() {
           <TextArea
             placeholder='Enter Property collection key and a value'
             value={nftAttributes}
-            onChange={(e) => setPropertyAttribute(e.target.value)}
+            onChange={(e) => setPropertyCollectionAttribute(e.target.value)}
           />
         </Form.Field>
         <Form.Field style={{ textAlign: 'center' }}>
@@ -355,7 +399,7 @@ export default function Main() {
         </Form.Field>
 
         <Form.Field>
-          <label>Set NFT price</label>
+          <label>Set NFT metadata</label>
           <TextArea
             placeholder='Enter NFT Metadata'
             value={nftMetadata}
@@ -363,7 +407,19 @@ export default function Main() {
           />
         </Form.Field>
         <Form.Field style={{ textAlign: 'center' }}>
-          <button onClick={handleSetNFTMetadata}>Set NFT Price</button>
+          <button onClick={handleSetNFTMetadata}>Set NFT metadata</button>
+        </Form.Field>
+
+        <Form.Field>
+          <label>Set NFT attributes</label>
+          <TextArea
+            placeholder='Enter NFT Attributes'
+            value={nftAttributes}
+            onChange={(e) => setNFTMetadata(e.target.value)}
+          />
+        </Form.Field>
+        <Form.Field style={{ textAlign: 'center' }}>
+          <button onClick={handleSetNFTAttributes}>Set NFT attributes</button>
         </Form.Field>
 
       </Form>
