@@ -7,7 +7,12 @@ export default function Main() {
   const [methodLabel, setMethodLabel] = useState(null)
   const [collectionId, setCollectionId] = useState(1020) // Initial collectionId
   const [metaData, setMetaData] = useState('')
-  const [propertyClassAttribute, setPropertyAttribute] = useState('') // State to hold metadata
+  const [propertyClassAttribute, setPropertyAttribute] = useState('') 
+  // eslint-disable-next-line no-unused-vars
+  const [nftAttributes, setNFTAttributes] = useState('')
+  const [nftPrice, setNFTPrice] = useState(0)// State to hold metadata
+
+  const [nftMetadata, setNFTMetadata] = useState('')
 
   const { keyring } = useSubstrateState()
 
@@ -34,6 +39,133 @@ export default function Main() {
           setMethodLabel(method);
         });
       });
+    } catch (error) {
+      console.error('Error:', error);
+      setStatus({ type: 'error', message: 'Error: ' + error.message });
+    }
+  }
+
+  // Sets metadata for an NFT
+  const handleSetNFTMetadata = async () => {
+    const ALICE = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY'
+    // eslint-disable-next-line no-unused-vars
+    const alicePair = keyring.getPair(ALICE);
+
+    const collectionId = 1020;
+    const itemId = 1;
+    const metadata = {
+      uri: "https://NEOSEA.io/property/1",
+      properties: {
+          key1: 'value1',
+          key2: 'value2'
+      }
+    };
+
+    const isFrozen  = false;
+
+    const tx = api.tx.uniques.setMetadata(collectionId, itemId, metadata, isFrozen);
+
+    try {
+      await tx.signAndSend(alicePair, ({ events = [], status }) => {
+        console.log('Transaction status:', status.type);
+        if (status.isInBlock) {
+          setStatus({ type: 'success', message: 'Transaction successful with hash: ' + status.asInBlock.toHex() + ' '+ status.type });
+        } else {
+          setStatus({ type: 'error', message: 'Status of transaction: ' + status.type });
+        }
+
+        events.forEach(({ event: { method } }) => {
+          console.log(method);
+          setMethodLabel(method);
+        });
+      });
+    
+    }
+    catch (error) {
+      console.error('Error:', error);
+      setStatus({ type: 'error', message: 'Error: ' + error.message });
+    }
+  }
+
+
+  const handleSetNFTPrice = async () => {
+    const ALICE = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
+
+    // Property company's address is the initial owner of an NFT (Item)
+    const alicePair = keyring.getPair(ALICE);
+
+    // These two fields are optional 
+    const BOB = '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty';
+    const bobPair = keyring.getPair(BOB);
+
+
+    const collectionId = 1020;
+    const itemId = 1;
+    const nftPrice = 10;
+    const whiteListBuyerAddress = bobPair.address;
+
+    const tx = api.tx.uniques.setPrice(collectionId, itemId, nftPrice, whiteListBuyerAddress);
+
+    try {
+      await tx.signAndSend(alicePair, ({ events = [], status }) => {
+        console.log('Transaction status:', status.type);
+        if (status.isInBlock) {
+          setStatus({ type: 'success', message: 'Transaction successful with hash: ' + status.asInBlock.toHex() + ' '+ status.type });
+        } else {
+          setStatus({ type: 'error', message: 'Status of transaction: ' + status.type });
+        }
+
+        events.forEach(({ event: { method } }) => {
+          console.log(method);
+          setMethodLabel(method);
+        });
+      });
+    
+    } catch (error) {
+      console.error('Error:', error);
+      setStatus({ type: 'error', message: 'Error: ' + error.message });
+    }
+
+  }
+
+  // Mints an NFT
+  const handleCreateNFT = async () => {
+
+
+    // this must be selected from a dropdown or from the selected property category.
+    const collectionId = 1020;
+    // Auto Increment field
+    const itemId = 1;
+
+    const ALICE = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
+
+    // Property company's address is the initial owner of an NFT (Item)
+    const alicePair = keyring.getPair(ALICE);
+  
+    // prepare transaction to mint an NFT (a  Property)
+    // A given collection can have zero or many items
+    const tx = api.tx.uniques.mint(
+      collectionId,
+      itemId, 
+      alicePair.address,
+    )
+
+    // Here we are sign and send a transaction
+    try {
+      await tx.signAndSend(alicePair, ({ events = [], status }) => {
+        console.log('Transaction status:', status.type);
+        if (status.isInBlock) {
+          setStatus({ type: 'success', message: 'Transaction successful with hash: ' + status.asInBlock.toHex() + ' '+ status.type });
+        } else {
+          setStatus({ type: 'error', message: 'Status of transaction: ' + status.type });
+        }
+
+        events.forEach(({ event: { method } }) => {
+          console.log(method);
+          setMethodLabel(method);
+        });
+      });
+    
     } catch (error) {
       console.error('Error:', error);
       setStatus({ type: 'error', message: 'Error: ' + error.message });
@@ -198,6 +330,42 @@ export default function Main() {
         <Form.Field style={{ textAlign: 'center' }}>
           <button onClick={handleSetCollectionAttributes}>Set Collection Attributes</button>
         </Form.Field>
+        <Form.Field>
+          <label>Now we gonna mint an NFT</label>
+          <TextArea
+            placeholder='Enter Property collection key and a value'
+            value={nftAttributes}
+            onChange={(e) => setPropertyAttribute(e.target.value)}
+          />
+        </Form.Field>
+        <Form.Field style={{ textAlign: 'center' }}>
+          <button onClick={handleCreateNFT}>Create NFT</button>
+        </Form.Field>
+        
+        <Form.Field>
+          <label>Set NFT price</label>
+          <TextArea
+            placeholder='Enter NFT price in NEOS'
+            value={nftPrice}
+            onChange={(e) => setNFTPrice(e.target.value)}
+          />
+        </Form.Field>
+        <Form.Field style={{ textAlign: 'center' }}>
+          <button onClick={handleSetNFTPrice}>Set NFT Price</button>
+        </Form.Field>
+
+        <Form.Field>
+          <label>Set NFT price</label>
+          <TextArea
+            placeholder='Enter NFT Metadata'
+            value={nftMetadata}
+            onChange={(e) => setNFTMetadata(e.target.value)}
+          />
+        </Form.Field>
+        <Form.Field style={{ textAlign: 'center' }}>
+          <button onClick={handleSetNFTMetadata}>Set NFT Price</button>
+        </Form.Field>
+
       </Form>
     </Grid.Column>
   )

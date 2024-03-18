@@ -1,3 +1,20 @@
+# FAQ
+
+* What's a frozen NFT ?
+  
+In Substrate, a frozen NFT refers to a non-fungible token (NFT) that has been locked or made non-transferable according to predefined conditions or rules encoded in the blockchain's logic.
+
+Freezing an NFT typically involves setting certain restrictions or conditions on its ownership or transferability. These conditions could include:
+
+* Time-based Locks: The NFT may be frozen for a specific period, during which it cannot be transferred or traded.
+
+* Event-based Locks: The NFT may be locked based on specific events or triggers, such as reaching a certain milestone, completing a task, or achieving a particular condition.
+
+* Permission-based Locks: Only certain accounts or entities may have permission to transfer the NFT. Others are restricted from transferring it until certain conditions are met.
+
+* Smart Contract Controls: Conditions encoded in smart contracts can specify when an NFT is locked or unlocked, based on various criteria determined by the contract's logic.
+
+
 # Substrate Front End Template
 
 This template allows you to create a front-end application that connects to a
