@@ -25,15 +25,20 @@ export default function Main() {
   const { keyring } = useSubstrateState()
 
   const { api } = useSubstrateState()
-
+   /*
+  ===================================
+  Value (CollectionId) | Address        
+  1                    | 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY 
+  2                    | 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY
+  */
   const handleClick = async () => {
     try {
       const ALICE = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
       const alicePair = keyring.getPair(ALICE);
 
-      const create_class = api.tx.uniques.create(propertyCollectionId, alicePair.address);
+      const tx = api.tx.uniques.create(propertyCollectionId, alicePair.address);
 
-      await create_class.signAndSend(alicePair, ({ events = [], status }) => {
+      await tx.signAndSend(alicePair, ({ events = [], status }) => {
         console.log('Transaction status:', status.type);
         if (status.isInBlock) {
           setStatus({ type: 'success', message: 'Transaction successful with hash: ' + status.asInBlock.toHex() + ' '+ status.type });
@@ -89,7 +94,8 @@ export default function Main() {
 
   }
 
-  // Sets metadata for an NFT
+ 
+  // This call creates  a collection.
   const handleSetNFTMetadata = async () => {
     const ALICE = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY'
     // eslint-disable-next-line no-unused-vars
@@ -108,6 +114,8 @@ export default function Main() {
     const isFrozen  = false;
 
     const tx = api.tx.uniques.setMetadata(collectionId, itemId, metadata, isFrozen);
+
+    console.log(tx);
 
     try {
       await tx.signAndSend(alicePair, ({ events = [], status }) => {
@@ -179,7 +187,7 @@ export default function Main() {
     // this must be selected from a dropdown or from the selected property category.
     const collectionId = 1020;
     // Auto Increment field
-    const itemId = 1;
+    const itemId = 33445566;
 
     const ALICE = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
 

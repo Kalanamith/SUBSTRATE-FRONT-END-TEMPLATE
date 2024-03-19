@@ -1,3 +1,31 @@
+# Flow
+
+1.Property Company creates a collection
+
+```
+uniques -> create(collectionId, accountAddress)
+```
+
+2.Property company sets attributes for the created collection
+
+```
+uniques -> setAttribute(collectionId, null, attribute, {"PropertyTypes": "Apartments", "LandOwnership": "Yes"})
+```
+
+The last parameter can be a file as well since it accepts a bytearray
+
+3. Set maximum items per collection
+
+```
+uniques -> setCollectionMaxSupply(collectionId, maxSupply)
+```
+
+4. Set collection metadata
+
+```
+uniques -> setCollectionMetadata(collectionId, {"hello": "world"}, false)
+```
+
 # FAQ
 
 * What's a frozen NFT ?
@@ -13,7 +41,6 @@ Freezing an NFT typically involves setting certain restrictions or conditions on
 * Permission-based Locks: Only certain accounts or entities may have permission to transfer the NFT. Others are restricted from transferring it until certain conditions are met.
 
 * Smart Contract Controls: Conditions encoded in smart contracts can specify when an NFT is locked or unlocked, based on various criteria determined by the contract's logic.
-
 
 # Substrate Front End Template
 
@@ -59,12 +86,11 @@ and open `build/index.html` in your favorite browser.
 
 Connecting to your local Substrate node (Chrome and Firefox only):
 
-https://substrate-developer-hub.github.io/substrate-front-end-template?rpc=ws://localhost:9944
+<https://substrate-developer-hub.github.io/substrate-front-end-template?rpc=ws://localhost:9944>
 
 Connecting to Polkadot:
 
-https://substrate-developer-hub.github.io/substrate-front-end-template?rpc=wss://rpc.polkadot.io
-
+<https://substrate-developer-hub.github.io/substrate-front-end-template?rpc=wss://rpc.polkadot.io>
 
 ## Configuration
 
@@ -72,30 +98,28 @@ The template's configuration is stored in the `src/config` directory, with
 `common.json` being loaded first, then the environment-specific JSON file,
 and finally environment variables, with precedence.
 
-- `development.json` affects the development environment
-- `test.json` affects the test environment, triggered in `yarn test` command.
-- `production.json` affects the production environment, triggered with the `yarn build` command.
+* `development.json` affects the development environment
+* `test.json` affects the test environment, triggered in `yarn test` command.
+* `production.json` affects the production environment, triggered with the `yarn build` command.
 
 To deploy your own front-end to production, you need to configure:
 
-- `PROVIDER_SOCKET` in `src/config/production.json` pointing to your own
+* `PROVIDER_SOCKET` in `src/config/production.json` pointing to your own
   deployed node.
 
 Some environment variables are read and integrated in the template `config` object,
 including:
 
-- `REACT_APP_PROVIDER_SOCKET` overriding `config[PROVIDER_SOCKET]`
+* `REACT_APP_PROVIDER_SOCKET` overriding `config[PROVIDER_SOCKET]`
 
 More on [React environment variables](https://create-react-app.dev/docs/adding-custom-environment-variables).
-
-
 
 ### How to Specify the WebSocket to Connect to
 
 There are two ways to specify the websocket to connect to:
 
-- With `PROVIDER_SOCKET` in `{common, development, production}.json`.
-- With `rpc=<ws or wss connection>` query parameter after the URL. This overrides the above setting.
+* With `PROVIDER_SOCKET` in `{common, development, production}.json`.
+* With `rpc=<ws or wss connection>` query parameter after the URL. This overrides the above setting.
 
 ## Reusable Components
 
@@ -118,15 +142,15 @@ keyring and the blockchain itself. Specifically it exposes this API.
 }
 ```
 
-- `socket` - The remote provider socket it is connecting to.
-- `keyring` - A keyring of accounts available to the user.
-- `keyringState` - One of `"READY"` or `"ERROR"` states. `keyring` is valid
+* `socket` - The remote provider socket it is connecting to.
+* `keyring` - A keyring of accounts available to the user.
+* `keyringState` - One of `"READY"` or `"ERROR"` states. `keyring` is valid
   only when `keyringState === "READY"`.
-- `api` - The remote api to the connected node.
-- `apiState` - One of `"CONNECTING"`, `"READY"`, or `"ERROR"` states. `api` is valid
+* `api` - The remote api to the connected node.
+* `apiState` - One of `"CONNECTING"`, `"READY"`, or `"ERROR"` states. `api` is valid
   only when `apiState === "READY"`.
-- `currentAccount` - The current selected account pair in the application context.
-- `setCurrentAccount` - Function to update the `currentAccount` value in the application context.
+* `currentAccount` - The current selected account pair in the application context.
+* `setCurrentAccount` - Function to update the `currentAccount` value in the application context.
 
 If you are only interested in reading the `state`, there is a shorthand `useSubstrateState()` just to retrieve the state.
 
@@ -143,7 +167,7 @@ it also displays the user's token balance. It is included in the template alread
 
 ## Miscellaneous
 
-- Polkadot-js API and related crypto libraries depend on [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) that is only supported by modern browsers. To ensure that react-scripts properly transpile your webapp code, update the `package.json` file:
+* Polkadot-js API and related crypto libraries depend on [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) that is only supported by modern browsers. To ensure that react-scripts properly transpile your webapp code, update the `package.json` file:
 
   ```json
   {

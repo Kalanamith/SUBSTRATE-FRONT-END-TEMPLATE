@@ -16,6 +16,7 @@ import AccountSelector from './AccountSelector'
 import BlockNumber from './BlockNumber'
 import Metadata from './Metadata'
 import NodeInfo from './NodeInfo'
+// eslint-disable-next-line no-unused-vars
 import Upgrade from './Upgrade'
 import Property from './Property'
 
@@ -71,7 +72,7 @@ function Main() {
           </Grid.Row> */}
           <Grid.Row>
             <Property />
-            <Upgrade />
+            {/* <Upgrade /> */}
           </Grid.Row>
           {/* <Grid.Row>
             <Transfer />
