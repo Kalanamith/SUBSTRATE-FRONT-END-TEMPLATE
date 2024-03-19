@@ -25,6 +25,54 @@ uniques -> setCollectionMaxSupply(collectionId, maxSupply)
 ```
 uniques -> setCollectionMetadata(collectionId, {"hello": "world"}, false)
 ```
+## Mint NFTs for properties
+const collectionId = 1
+const itemId = 1
+const owner = PropertyCompnay.address
+
+1. Mints an NFT for a property
+uniques -> mint(collectionId, itemId, owner)
+
+2. setAttribute(collectionId, itemId, propertyKey, {"type": "summer home", "make": "wood", "ownershipPeriod": "180-days"})
+
+3. Sets price for an NFT
+uniques -> setPrice(collectionId, itemId, setPrice, null)
+
+## Tranfering an NFT from a property company to BOB (a buyer)
+
+* ```
+  owned by Alice (property company )
+  collectionId = 1
+  itemId = 2
+  price 4500
+  ```
+
+* BOB the buyer selects a property from the exchange
+uniques -> buyItem(collectionId, itemId, bidPrice)
+
+ 
+
+```
+// Check Price
+collectionId=1, assetId=3 price
+uniques.itemPriceOf: Option<(u128,Option<AccountId32>)>
+[
+  100
+  null
+]
+```
+
+```
+//after buying
+{
+  owner: 5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty
+  approved: null
+  isFrozen: false
+  deposit: 100,000,000,000,000
+}
+```
+
+
 
 # FAQ
 
